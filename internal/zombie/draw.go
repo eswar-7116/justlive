@@ -13,8 +13,6 @@ func (z *Zombie) Draw(textures []rl.Texture2D) {
 		sourceRec.Width = -sourceRec.Width
 	}
 	drawRec := z.DrawRec()
-	colRec := z.CollisionRec()
 	origin := rl.NewVector2(0, 0)
-	rl.DrawRectanglePro(colRec, origin, 0, rl.Red)
 	rl.DrawTexturePro(texture, sourceRec, drawRec, origin, 0, rl.White)
 }
