@@ -36,6 +36,10 @@ func (g *Game) drawMenu() {
 func (g *Game) drawGameplay() {
 	g.player.Draw(g.gunTexture)
 
+	for _, b := range g.bullets {
+		b.Draw(g.bulletTexture)
+	}
+
 	for _, z := range g.zombies {
 		z.Draw(g.zombieTextures)
 	}
@@ -83,8 +87,13 @@ func (g *Game) drawUI() {
 		hpText = "0%"
 	}
 	rl.DrawText(hpText, int32(barX+barWidth+8), 20, 12, rl.LightGray)
+
+	scoreText := fmt.Sprintf("Score: %d", g.score)
+	rl.DrawText(scoreText, g.width - rl.MeasureText(scoreText, 20) - 20, 20, 20, rl.RayWhite)
 }
 
 func (g *Game) drawGameover() {
 	rl.DrawText("Game Over", 100, 100, 50, rl.White)
+	scoreText := fmt.Sprintf("Final Score: %d", g.score)
+	rl.DrawText(scoreText, 100, 170, 30, rl.LightGray)
 }

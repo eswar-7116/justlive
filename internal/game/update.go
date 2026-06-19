@@ -1,6 +1,9 @@
 package game
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	"github.com/eswar-7116/justlive/internal/bullet"
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 func (g *Game) update(dt float32) {
 	switch g.gameState {
@@ -22,11 +25,69 @@ func (g *Game) update(dt float32) {
 			g.spawnTimer = 0
 		}
 
+		if g.shootTimer > 0 {
+			g.shootTimer -= dt
+		}
+
+		if rl.IsMouseButtonDown(rl.MouseLeftButton) && g.shootTimer <= 0 {
+			gunPos, dir := g.player.GetGunPosAndDir(g.gunTexture)
+			g.bullets = append(g.bullets, bullet.NewBullet(gunPos, dir))
+			g.shootTimer = g.fireRate
+		}
+
+		for _, b := range g.bullets {
+			if b.Active {
+				b.Update(dt)
+			}
+		}
+
+		for _, b := range g.bullets {
+			if !b.Active {
+				continue
+			}
+			for _, z := range g.zombies {
+				if rl.CheckCollisionCircleRec(b.Position, b.Radius, z.CollisionRec()) {
+					wasAlive := z.Health > 0
+					z.Health -= b.Damage
+					if wasAlive && z.Health <= 0 {
+						g.score += 10
+						if g.score > 0 && g.score%50 == 0 {
+							g.zombieSpeed += 10
+							for _, zo := range g.zombies {
+								zo.IncreaseSpeed(10)
+							}
+						}
+					}
+					b.Active = false
+
+					pushDir := rl.Vector2Normalize(b.Direction)
+					z.Knockback = rl.Vector2Add(z.Knockback, rl.Vector2Scale(pushDir, 500))
+					break
+				}
+			}
+		}
+
 		for _, z := range g.zombies {
 			z.Update(dt, g.player)
 		}
 
 		g.resolveZombieOverlaps()
+
+		activeBullets := g.bullets[:0]
+		for _, b := range g.bullets {
+			if b.Active {
+				activeBullets = append(activeBullets, b)
+			}
+		}
+		g.bullets = activeBullets
+
+		activeZombies := g.zombies[:0]
+		for _, z := range g.zombies {
+			if z.Health > 0 {
+				activeZombies = append(activeZombies, z)
+			}
+		}
+		g.zombies = activeZombies
 	}
 }
 

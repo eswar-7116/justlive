@@ -2,6 +2,7 @@ package player
 
 import (
 	"image/color"
+	"math"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -27,4 +28,23 @@ func NewPlayer(center rl.Vector2, radius float32) *Player {
 		InvulnerableTimer: 0,
 		Angle:             0,
 	}
+}
+
+func (p *Player) GetGunPosAndDir(gunTexture rl.Texture2D) (rl.Vector2, rl.Vector2) {
+	gunDist := p.Radius * 1.1
+	gunScale := float32(0.2)
+	gunPos := rl.Vector2{
+		X: p.Center.X + float32(math.Cos(float64(p.Angle)))*gunDist,
+		Y: p.Center.Y + float32(math.Sin(float64(p.Angle)))*gunDist,
+	}
+
+	dir := rl.Vector2{
+		X: float32(math.Cos(float64(p.Angle))),
+		Y: float32(math.Sin(float64(p.Angle))),
+	}
+
+	gunLen := float32(gunTexture.Height) * gunScale
+	tip := rl.Vector2Add(gunPos, rl.Vector2Scale(dir, gunLen/2))
+
+	return tip, dir
 }

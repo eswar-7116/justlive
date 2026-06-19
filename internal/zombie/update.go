@@ -20,7 +20,7 @@ func (z *Zombie) Update(dt float32, p *player.Player) {
 			rl.Vector2Subtract(z.Position, p.Center),
 		)
 
-		z.knockback = rl.Vector2Scale(pushDir, 800)
+		z.Knockback = rl.Vector2Scale(pushDir, 800)
 	}
 
 	z.direction = rl.Vector2Subtract(p.Center, z.Position)
@@ -30,13 +30,13 @@ func (z *Zombie) Update(dt float32, p *player.Player) {
 		z.speed,
 	)
 
-	totalVel := rl.Vector2Add(moveVel, z.knockback)
+	totalVel := rl.Vector2Add(moveVel, z.Knockback)
 
 	z.Position = rl.Vector2Add(
 		z.Position,
 		rl.Vector2Scale(totalVel, dt),
 	)
-	z.knockback = rl.Vector2Scale(z.knockback, float32(math.Pow(0.01, float64(dt))))
+	z.Knockback = rl.Vector2Scale(z.Knockback, float32(math.Pow(0.01, float64(dt))))
 
 	z.animTimer += dt
 	if z.animTimer >= 0.1 {

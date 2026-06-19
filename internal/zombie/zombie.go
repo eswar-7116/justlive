@@ -12,8 +12,8 @@ type Zombie struct {
 	Color     color.RGBA
 	direction rl.Vector2
 	speed     float32
-	health    float32
-	knockback rl.Vector2
+	Health    float32
+	Knockback rl.Vector2
 	animTimer float32
 	animFrame int
 }
@@ -24,7 +24,7 @@ func NewZombie(position rl.Vector2, size rl.Vector2, speed float32, health float
 		Size:      size,
 		Color:     rl.Red,
 		speed:     speed,
-		health:    health,
+		Health:    health,
 		animTimer: 0,
 		animFrame: 0,
 	}
@@ -58,4 +58,8 @@ func (z *Zombie) CollisionRec() rl.Rectangle {
 		Width:  colWidth,
 		Height: colHeight,
 	}
+}
+
+func (z *Zombie) IncreaseSpeed(amount float32) {
+	z.speed += amount
 }

@@ -34,6 +34,6 @@ func (g *Game) spawnZombie() {
 	}
 
 	size := rl.Vector2{X: 30, Y: 30}
-	z := zombie.NewZombie(pos, size, 50, 100)
+	z := zombie.NewZombie(pos, size, g.zombieSpeed, 100)
 	g.zombies = append(g.zombies, z)
 }
