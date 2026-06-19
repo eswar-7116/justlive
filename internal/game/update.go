@@ -61,7 +61,7 @@ func (g *Game) update(dt float32) {
 					b.Active = false
 
 					pushDir := rl.Vector2Normalize(b.Direction)
-					z.Knockback = rl.Vector2Add(z.Knockback, rl.Vector2Scale(pushDir, 500))
+					z.Knockback = rl.Vector2Add(z.Knockback, rl.Vector2Scale(pushDir, 100))
 					break
 				}
 			}
@@ -88,6 +88,21 @@ func (g *Game) update(dt float32) {
 			}
 		}
 		g.zombies = activeZombies
+	case GameStateOver:
+		if rl.IsKeyDown(rl.KeyP) {
+			center := rl.Vector2{X: float32(g.width) / 2, Y: float32(g.height) / 2}
+			g.player.Health = 100
+			g.player.Center = center
+			g.player.InvulnerableTimer = 0
+			g.player.Angle = 0
+			g.zombies = g.zombies[:0]
+			g.bullets = g.bullets[:0]
+			g.score = 0
+			g.spawnTimer = 0
+			g.shootTimer = 0
+			g.zombieSpeed = 50
+			g.gameState = GameStatePlaying
+		}
 	}
 }
 

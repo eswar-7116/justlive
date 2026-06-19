@@ -93,7 +93,27 @@ func (g *Game) drawUI() {
 }
 
 func (g *Game) drawGameover() {
-	rl.DrawText("Game Over", 100, 100, 50, rl.White)
+	var titleFontSize int32 = 80
+	titleText := "Game Over"
+	titleWidth := rl.MeasureText(titleText, titleFontSize)
+	titleX := (g.width - titleWidth) / 2
+	titleY := (g.height - titleFontSize) / 2 - 60
+
+	rl.DrawText(titleText, titleX, titleY, titleFontSize, rl.Red)
+
+	var scoreFontSize int32 = 40
 	scoreText := fmt.Sprintf("Final Score: %d", g.score)
-	rl.DrawText(scoreText, 100, 170, 30, rl.LightGray)
+	scoreWidth := rl.MeasureText(scoreText, scoreFontSize)
+	scoreX := (g.width - scoreWidth) / 2
+	scoreY := titleY + titleFontSize + 20
+
+	rl.DrawText(scoreText, scoreX, scoreY, scoreFontSize, rl.LightGray)
+
+	var pFontSize int32 = 30
+	pText := "Press P to play"
+	pWidth := rl.MeasureText(pText, pFontSize)
+	pX := (g.width - pWidth) / 2
+	pY := scoreY + scoreFontSize + 40
+
+	rl.DrawText(pText, pX, pY, pFontSize, rl.RayWhite)
 }

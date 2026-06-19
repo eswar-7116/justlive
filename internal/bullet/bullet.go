@@ -32,7 +32,8 @@ func (b *Bullet) Update(dt float32) {
 	screenWidth := float32(rl.GetScreenWidth())
 	screenHeight := float32(rl.GetScreenHeight())
 	
-	if b.Position.X < 0 || b.Position.X > screenWidth || b.Position.Y < 0 || b.Position.Y > screenHeight {
+	margin := float32(200)
+	if b.Position.X < -margin || b.Position.X > screenWidth+margin || b.Position.Y < -margin || b.Position.Y > screenHeight+margin {
 		b.Active = false
 	}
 }
