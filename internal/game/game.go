@@ -1,21 +1,24 @@
 package game
 
 import (
+	"fmt"
+
 	"github.com/eswar-7116/justlive/internal/player"
 	"github.com/eswar-7116/justlive/internal/zombie"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 type Game struct {
-	width     int32
-	height    int32
-	title     string
-	gameState GameState
-	player    *player.Player
-	zombies   []*zombie.Zombie
-
-	spawnTimer    float32
-	spawnInterval float32
+	width          int32
+	height         int32
+	title          string
+	gameState      GameState
+	player         *player.Player
+	zombies        []*zombie.Zombie
+	spawnTimer     float32
+	spawnInterval  float32
+	zombieTextures []rl.Texture2D
+	gunTexture     rl.Texture2D
 }
 
 func NewGame(width, height int32, title string) *Game {
@@ -36,6 +39,20 @@ func NewGame(width, height int32, title string) *Game {
 func (g *Game) Run() {
 	rl.InitWindow(int32(g.width), int32(g.height), g.title)
 	defer rl.CloseWindow()
+
+	// Load zombie textures
+	g.zombieTextures = make([]rl.Texture2D, 10)
+	for i := 0; i < 10; i++ {
+		path := fmt.Sprintf("assets/zombie%d.png", i+1)
+		g.zombieTextures[i] = rl.LoadTexture(path)
+	}
+	g.gunTexture = rl.LoadTexture("assets/gun.png")
+	defer func() {
+		for _, tex := range g.zombieTextures {
+			rl.UnloadTexture(tex)
+		}
+		rl.UnloadTexture(g.gunTexture)
+	}()
 
 	rl.SetTargetFPS(60)
 	for !rl.WindowShouldClose() {

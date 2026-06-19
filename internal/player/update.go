@@ -1,6 +1,10 @@
 package player
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	"math"
+
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 func boolToFloat32(b bool) float32 {
 	if b {
@@ -28,10 +32,17 @@ func (p *Player) checkBounds() {
 }
 
 func (p *Player) Update(dt float32) {
+	if p.InvulnerableTimer > 0 {
+		p.InvulnerableTimer -= dt
+	}
+
 	p.direction.X = boolToFloat32(rl.IsKeyDown(rl.KeyD)) - boolToFloat32(rl.IsKeyDown(rl.KeyA))
 	p.direction.Y = boolToFloat32(rl.IsKeyDown(rl.KeyS)) - boolToFloat32(rl.IsKeyDown(rl.KeyW))
 
 	p.Center = rl.Vector2Add(p.Center, rl.Vector2Scale(rl.Vector2Normalize(p.direction), p.speed*dt))
+
+	mousePos := rl.GetMousePosition()
+	p.Angle = float32(math.Atan2(float64(mousePos.Y-p.Center.Y), float64(mousePos.X-p.Center.X)))
 
 	p.checkBounds()
 }

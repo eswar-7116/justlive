@@ -7,20 +7,24 @@ import (
 )
 
 type Player struct {
-	Center    rl.Vector2
-	Radius    float32
-	Color     color.RGBA
-	direction rl.Vector2
-	speed     float32
-	Health    float32
+	Center            rl.Vector2
+	Radius            float32
+	Color             color.RGBA
+	direction         rl.Vector2
+	speed             float32
+	Health            float32
+	InvulnerableTimer float32
+	Angle             float32
 }
 
 func NewPlayer(center rl.Vector2, radius float32) *Player {
 	return &Player{
-		Center: center,
-		Radius: radius,
-		Color:  rl.Beige,
-		speed:  250,
-		Health: 100,
+		Center:            center,
+		Radius:            radius,
+		Color:             rl.Beige,
+		speed:             250,
+		Health:            100,
+		InvulnerableTimer: 0,
+		Angle:             0,
 	}
 }
