@@ -60,6 +60,7 @@ func (g *Game) update(dt float32) {
 					wasAlive := z.Health > 0
 					pushDir := rl.Vector2Normalize(b.Direction)
 					z.Hit(b.Damage, rl.Vector2Scale(pushDir, b.Knockback))
+					g.particles = append(g.particles, particle.Spray(b.Position, b.Direction)...)
 					if wasAlive && z.Health <= 0 {
 						g.particles = append(g.particles, particle.Burst(z.Center())...)
 						if rand.Float32() < dropChance {

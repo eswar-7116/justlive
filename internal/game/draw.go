@@ -44,10 +44,6 @@ func (g *Game) drawMenu() {
 func (g *Game) drawGameplay() {
 	rl.BeginMode2D(rl.Camera2D{Offset: g.shakeOffset(), Zoom: 1})
 
-	for _, p := range g.particles {
-		p.Draw()
-	}
-
 	for _, d := range g.drops {
 		d.Draw()
 	}
@@ -60,6 +56,10 @@ func (g *Game) drawGameplay() {
 
 	for _, z := range g.zombies {
 		z.Draw(g.zombieTextures)
+	}
+
+	for _, p := range g.particles {
+		p.Draw()
 	}
 
 	rl.EndMode2D()
