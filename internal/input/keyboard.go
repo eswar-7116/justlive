@@ -19,5 +19,6 @@ func FromKeyboard() Input {
 		Aim:   rl.GetMousePosition(),
 		Shoot: rl.IsMouseButtonDown(rl.MouseLeftButton),
 		Dash:  rl.IsKeyPressed(rl.KeySpace),
+		Start: rl.IsKeyPressed(rl.KeyP),
 	}
 }

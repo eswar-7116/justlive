@@ -7,4 +7,5 @@ type Input struct {
 	Aim   rl.Vector2
 	Shoot bool
 	Dash  bool
+	Start bool
 }

@@ -11,9 +11,11 @@ import (
 )
 
 func (g *Game) update(dt float32) {
+	in := input.FromKeyboard()
+
 	switch g.gameState {
 	case GameStateMenu:
-		if rl.IsKeyPressed(rl.KeyP) {
+		if in.Start {
 			g.gameState = GameStatePlaying
 		}
 	case GameStatePlaying:
@@ -23,7 +25,6 @@ func (g *Game) update(dt float32) {
 			break
 		}
 
-		in := input.FromKeyboard()
 		g.player.Update(dt, in)
 
 		g.spawnTimer += dt
@@ -138,7 +139,7 @@ func (g *Game) update(dt float32) {
 		}
 		g.zombies = activeZombies
 	case GameStateOver:
-		if rl.IsKeyPressed(rl.KeyP) {
+		if in.Start {
 			g.reset()
 			g.gameState = GameStatePlaying
 		}
