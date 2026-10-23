@@ -36,3 +36,6 @@ go.work.sum
 # Build outputs
 justlive
 *.zip
+
+# Temporary files
+/tmp
