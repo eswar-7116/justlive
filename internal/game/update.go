@@ -17,6 +17,7 @@ func (g *Game) update(dt float32) {
 		}
 	case GameStatePlaying:
 		if g.player.Health <= 0 {
+			g.checkAndSaveHighScore()
 			g.gameState = GameStateOver
 			break
 		}

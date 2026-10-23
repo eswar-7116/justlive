@@ -59,25 +59,40 @@ const (
 )
 
 type Game struct {
-	width          int32
-	height         int32
-	title          string
-	gameState      GameState
-	player         *player.Player
-	zombies        []*zombie.Zombie
-	spawnTimer     float32
-	spawnInterval  float32
+	// Window
+	width     int32
+	height    int32
+	title     string
+	gameState GameState
+
+	// Textures
 	zombieTextures []rl.Texture2D
 	gunTexture     rl.Texture2D
-	bullets        []*bullet.Bullet
 	bulletTexture  rl.Texture2D
-	shootTimer     float32
-	fireRate       float32
-	score          int
-	zombieSpeed    float32
-	shake          float32
-	particles      []*particle.Particle
-	drops          []*drop.Drop
+
+	// Player
+	player     *player.Player
+	shootTimer float32
+	fireRate   float32
+
+	// Entities
+	zombies []*zombie.Zombie
+	bullets []*bullet.Bullet
+	drops   []*drop.Drop
+
+	// Spawning and difficulty
+	spawnTimer    float32
+	spawnInterval float32
+	zombieSpeed   float32
+
+	// Score
+	score        int
+	highScore    int
+	newHighScore bool
+
+	// Effects
+	shake     float32
+	particles []*particle.Particle
 }
 
 func NewGame(width, height int32, title string) *Game {
@@ -87,24 +102,35 @@ func NewGame(width, height int32, title string) *Game {
 		title:     title,
 		gameState: GameStateMenu,
 		fireRate:  baseFireRate,
+		highScore: loadHighScore(),
 	}
 	g.reset()
 	return g
 }
 
 func (g *Game) reset() {
+	// Player
 	center := rl.Vector2{X: float32(g.width) / 2, Y: float32(g.height) / 2}
 	g.player = player.NewPlayer(center, playerRadius)
+	g.shootTimer = 0
+
+	// Entities
 	g.zombies = g.zombies[:0]
 	g.bullets = g.bullets[:0]
-	g.score = 0
+	g.drops = g.drops[:0]
+
+	// Spawning and difficulty
 	g.spawnTimer = 0
 	g.spawnInterval = startSpawnInterval
-	g.shootTimer = 0
 	g.zombieSpeed = baseZombieSpeed
+
+	// Score
+	g.score = 0
+	g.newHighScore = false
+
+	// Effects
 	g.shake = 0
 	g.particles = g.particles[:0]
-	g.drops = g.drops[:0]
 }
 
 func (g *Game) Run() {
@@ -138,6 +164,11 @@ func (g *Game) Run() {
 		rl.ClearBackground(rl.Black)
 		g.draw()
 		rl.EndDrawing()
+	}
+
+	// Window closed mid-run
+	if g.gameState == GameStatePlaying {
+		g.checkAndSaveHighScore()
 	}
 }
 

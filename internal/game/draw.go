@@ -32,6 +32,13 @@ func (g *Game) drawMenu() {
 	var X int32 = (g.width - textWidth) / 2
 	var Y int32 = ((g.height - fontSize) / 2) + titleFontSize
 	rl.DrawText(text, X, Y, fontSize, rl.RayWhite)
+
+	if g.highScore > 0 {
+		var hsFontSize int32 = 20
+		hsText := fmt.Sprintf("High Score: %d", g.highScore)
+		hsX := (g.width - rl.MeasureText(hsText, hsFontSize)) / 2
+		rl.DrawText(hsText, hsX, Y+fontSize+20, hsFontSize, rl.LightGray)
+	}
 }
 
 func (g *Game) drawGameplay() {
@@ -113,6 +120,9 @@ func (g *Game) drawUI() {
 
 	scoreText := fmt.Sprintf("Score: %d", g.score)
 	rl.DrawText(scoreText, g.width - rl.MeasureText(scoreText, 20) - 20, 20, 20, rl.RayWhite)
+
+	bestText := fmt.Sprintf("Best: %d", max(g.highScore, g.score))
+	rl.DrawText(bestText, g.width-rl.MeasureText(bestText, 12)-20, 44, 12, rl.LightGray)
 }
 
 func (g *Game) drawGameover() {
@@ -132,11 +142,22 @@ func (g *Game) drawGameover() {
 
 	rl.DrawText(scoreText, scoreX, scoreY, scoreFontSize, rl.LightGray)
 
+	var hsFontSize int32 = 24
+	hsText := fmt.Sprintf("High Score: %d", g.highScore)
+	hsColor := rl.LightGray
+	if g.newHighScore {
+		hsText = "New High Score!"
+		hsColor = rl.Yellow
+	}
+	hsX := (g.width - rl.MeasureText(hsText, hsFontSize)) / 2
+	hsY := scoreY + scoreFontSize + 16
+	rl.DrawText(hsText, hsX, hsY, hsFontSize, hsColor)
+
 	var pFontSize int32 = 30
 	pText := "Press P to play"
 	pWidth := rl.MeasureText(pText, pFontSize)
 	pX := (g.width - pWidth) / 2
-	pY := scoreY + scoreFontSize + 40
+	pY := hsY + hsFontSize + 30
 
 	rl.DrawText(pText, pX, pY, pFontSize, rl.RayWhite)
 }
