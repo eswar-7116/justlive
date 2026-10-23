@@ -9,6 +9,8 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
+const maxFrameTime float32 = 0.05 // 20 FPS floor
+
 type Game struct {
 	width          int32
 	height         int32
@@ -72,7 +74,7 @@ func (g *Game) Run() {
 
 	rl.SetTargetFPS(60)
 	for !rl.WindowShouldClose() {
-		dt := rl.GetFrameTime()
+		dt := min(rl.GetFrameTime(), maxFrameTime)
 		g.update(dt)
 
 		rl.BeginDrawing()
