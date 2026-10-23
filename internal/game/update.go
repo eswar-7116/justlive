@@ -8,7 +8,7 @@ import (
 func (g *Game) update(dt float32) {
 	switch g.gameState {
 	case GameStateMenu:
-		if rl.IsKeyDown(rl.KeyP) {
+		if rl.IsKeyPressed(rl.KeyP) {
 			g.gameState = GameStatePlaying
 		}
 	case GameStatePlaying:
@@ -89,7 +89,7 @@ func (g *Game) update(dt float32) {
 		}
 		g.zombies = activeZombies
 	case GameStateOver:
-		if rl.IsKeyDown(rl.KeyP) {
+		if rl.IsKeyPressed(rl.KeyP) {
 			center := rl.Vector2{X: float32(g.width) / 2, Y: float32(g.height) / 2}
 			g.player.Health = 100
 			g.player.Center = center
