@@ -51,11 +51,11 @@ func (g *Game) update(dt float32) {
 					wasAlive := z.Health > 0
 					z.Health -= b.Damage
 					if wasAlive && z.Health <= 0 {
-						g.score += 10
-						if g.score > 0 && g.score%50 == 0 {
-							g.zombieSpeed = min(g.zombieSpeed+10, maxZombieSpeed)
+						g.score += killScore
+						if g.score > 0 && g.score%speedUpScore == 0 {
+							g.zombieSpeed = min(g.zombieSpeed+zombieSpeedStep, maxZombieSpeed)
 							for _, zo := range g.zombies {
-								zo.IncreaseSpeed(10, maxZombieSpeed)
+								zo.IncreaseSpeed(zombieSpeedStep, maxZombieSpeed)
 							}
 						}
 					}
@@ -91,18 +91,7 @@ func (g *Game) update(dt float32) {
 		g.zombies = activeZombies
 	case GameStateOver:
 		if rl.IsKeyPressed(rl.KeyP) {
-			center := rl.Vector2{X: float32(g.width) / 2, Y: float32(g.height) / 2}
-			g.player.Health = 100
-			g.player.Center = center
-			g.player.InvulnerableTimer = 0
-			g.player.Angle = 0
-			g.zombies = g.zombies[:0]
-			g.bullets = g.bullets[:0]
-			g.score = 0
-			g.spawnTimer = 0
-			g.spawnInterval = startSpawnInterval
-			g.shootTimer = 0
-			g.zombieSpeed = 50
+			g.reset()
 			g.gameState = GameStatePlaying
 		}
 	}

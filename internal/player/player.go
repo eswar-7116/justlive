@@ -7,6 +7,13 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
+const (
+	baseMaxHealth float32 = 100
+	baseSpeed     float32 = 250
+	gunScale      float32 = 0.2
+	gunDistFactor float32 = 1.1
+)
+
 type Player struct {
 	Center            rl.Vector2
 	Radius            float32
@@ -14,6 +21,7 @@ type Player struct {
 	direction         rl.Vector2
 	speed             float32
 	Health            float32
+	MaxHealth         float32
 	InvulnerableTimer float32
 	Angle             float32
 }
@@ -23,16 +31,16 @@ func NewPlayer(center rl.Vector2, radius float32) *Player {
 		Center:            center,
 		Radius:            radius,
 		Color:             rl.Beige,
-		speed:             250,
-		Health:            100,
+		speed:             baseSpeed,
+		Health:            baseMaxHealth,
+		MaxHealth:         baseMaxHealth,
 		InvulnerableTimer: 0,
 		Angle:             0,
 	}
 }
 
 func (p *Player) GetGunPosAndDir(gunTexture rl.Texture2D) (rl.Vector2, rl.Vector2) {
-	gunDist := p.Radius * 1.1
-	gunScale := float32(0.2)
+	gunDist := p.Radius * gunDistFactor
 	gunPos := rl.Vector2{
 		X: p.Center.X + float32(math.Cos(float64(p.Angle)))*gunDist,
 		Y: p.Center.Y + float32(math.Sin(float64(p.Angle)))*gunDist,

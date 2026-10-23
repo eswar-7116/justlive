@@ -43,13 +43,12 @@ func (p *Player) Draw(gunTexture rl.Texture2D) {
 	rl.DrawCircleV(rightHandPos, handRadius, color)
 
 	// Draw Gun
-	gunDist := p.Radius * 1.1
+	gunDist := p.Radius * gunDistFactor
 	gunPos := rl.Vector2{
 		X: p.Center.X + float32(math.Cos(float64(p.Angle)))*gunDist,
 		Y: p.Center.Y + float32(math.Sin(float64(p.Angle)))*gunDist,
 	}
 
-	gunScale := float32(0.2)
 	destRec := rl.Rectangle{
 		X:      gunPos.X,
 		Y:      gunPos.Y,

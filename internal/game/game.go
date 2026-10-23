@@ -11,13 +11,35 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
+const maxFrameTime float32 = 0.05 // 20 FPS floor
+
+// Player
 const (
-	maxFrameTime       float32 = 0.05 // 20 FPS floor
+	playerRadius float32 = 30
+	baseFireRate float32 = 0.15
+)
+
+// Zombie
+const (
+	zombieSize   float32 = 30
+	zombieHealth float32 = 100
+	zombieJostle float32 = 120 // extra push px/s, 2px at 60 FPS
+)
+
+// Spawning
+const (
 	startSpawnInterval float32 = 2.0
 	minSpawnInterval   float32 = 0.4
 	spawnIntervalDecay float32 = 0.97
-	maxZombieSpeed     float32 = 200 // stay below player speed
-	zombieJostle       float32 = 120 // extra push px/s, 2px at 60 FPS
+)
+
+// Difficulty
+const (
+	baseZombieSpeed float32 = 50
+	maxZombieSpeed  float32 = 200 // stay below player speed
+	zombieSpeedStep float32 = 10
+	killScore               = 10
+	speedUpScore            = 50 // speed up zombies every 50 score
 )
 
 type Game struct {
@@ -40,22 +62,27 @@ type Game struct {
 }
 
 func NewGame(width, height int32, title string) *Game {
-	center := rl.Vector2{X: float32(width) / 2, Y: float32(height) / 2}
-	p := player.NewPlayer(center, 30)
-
-	return &Game{
-		width:         width,
-		height:        height,
-		title:         title,
-		gameState:     GameStateMenu,
-		player:        p,
-		zombies:       make([]*zombie.Zombie, 0),
-		spawnInterval: startSpawnInterval,
-		bullets:       make([]*bullet.Bullet, 0),
-		fireRate:      0.15,
-		score:         0,
-		zombieSpeed:   50,
+	g := &Game{
+		width:     width,
+		height:    height,
+		title:     title,
+		gameState: GameStateMenu,
+		fireRate:  baseFireRate,
 	}
+	g.reset()
+	return g
+}
+
+func (g *Game) reset() {
+	center := rl.Vector2{X: float32(g.width) / 2, Y: float32(g.height) / 2}
+	g.player = player.NewPlayer(center, playerRadius)
+	g.zombies = g.zombies[:0]
+	g.bullets = g.bullets[:0]
+	g.score = 0
+	g.spawnTimer = 0
+	g.spawnInterval = startSpawnInterval
+	g.shootTimer = 0
+	g.zombieSpeed = baseZombieSpeed
 }
 
 func (g *Game) Run() {

@@ -58,7 +58,7 @@ func (g *Game) drawUI() {
 	bgBarRec := rl.NewRectangle(barX, barY, barWidth, barHeight)
 	rl.DrawRectangleRounded(bgBarRec, 0.5, 4, color.RGBA{R: 50, G: 50, B: 50, A: 120})
 
-	healthPct := g.player.Health / 100.0
+	healthPct := g.player.Health / g.player.MaxHealth
 	if healthPct < 0 {
 		healthPct = 0
 	}
@@ -82,10 +82,7 @@ func (g *Game) drawUI() {
 
 	rl.DrawRectangleRoundedLines(bgBarRec, 0.5, 4, color.RGBA{R: 120, G: 120, B: 120, A: 100})
 
-	hpText := fmt.Sprintf("%.0f%%", g.player.Health)
-	if g.player.Health < 0 {
-		hpText = "0%"
-	}
+	hpText := fmt.Sprintf("%.0f/%.0f", max(g.player.Health, 0), g.player.MaxHealth)
 	rl.DrawText(hpText, int32(barX+barWidth+8), 20, 12, rl.LightGray)
 
 	scoreText := fmt.Sprintf("Score: %d", g.score)

@@ -14,26 +14,26 @@ func (g *Game) spawnZombie() {
 	case 0: // top
 		pos = rl.Vector2{
 			X: float32(rand.Int31n(g.width)),
-			Y: -30,
+			Y: -zombieSize,
 		}
 	case 1: // right
 		pos = rl.Vector2{
-			X: float32(g.width) + 30,
+			X: float32(g.width) + zombieSize,
 			Y: float32(rand.Int31n(g.height)),
 		}
 	case 2: // bottom
 		pos = rl.Vector2{
 			X: float32(rand.Int31n(g.width)),
-			Y: float32(g.height) + 30,
+			Y: float32(g.height) + zombieSize,
 		}
 	case 3: // left
 		pos = rl.Vector2{
-			X: -30,
+			X: -zombieSize,
 			Y: float32(rand.Int31n(g.height)),
 		}
 	}
 
-	size := rl.Vector2{X: 30, Y: 30}
-	z := zombie.NewZombie(pos, size, g.zombieSpeed, 100)
+	size := rl.Vector2{X: zombieSize, Y: zombieSize}
+	z := zombie.NewZombie(pos, size, g.zombieSpeed, zombieHealth)
 	g.zombies = append(g.zombies, z)
 }

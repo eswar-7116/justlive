@@ -6,6 +6,12 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
+const (
+	contactDamage    float32 = 10  // HP
+	contactInvuln    float32 = 0.5 // seconds
+	contactKnockback float32 = 800 // px/s
+)
+
 type Zombie struct {
 	Position  rl.Vector2
 	Size      rl.Vector2

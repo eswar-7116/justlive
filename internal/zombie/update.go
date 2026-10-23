@@ -12,15 +12,15 @@ func (z *Zombie) Update(dt float32, p *player.Player) {
 
 	if rl.CheckCollisionCircleRec(p.Center, p.Radius, zrect) {
 		if p.InvulnerableTimer <= 0 {
-			p.Health -= 10
-			p.InvulnerableTimer = 0.5
+			p.Health -= contactDamage
+			p.InvulnerableTimer = contactInvuln
 		}
 
 		pushDir := rl.Vector2Normalize(
 			rl.Vector2Subtract(z.Center(), p.Center),
 		)
 
-		z.Knockback = rl.Vector2Scale(pushDir, 800)
+		z.Knockback = rl.Vector2Scale(pushDir, contactKnockback)
 	}
 
 	z.direction = rl.Vector2Subtract(p.Center, z.Center())
