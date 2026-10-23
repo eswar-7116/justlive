@@ -56,7 +56,7 @@ func (g *Game) Run() {
 
 	// Load zombie textures
 	g.zombieTextures = make([]rl.Texture2D, 10)
-	for i := 0; i < 10; i++ {
+	for i := range 10 {
 		path := fmt.Sprintf("assets/zombie%d.png", i+1)
 		g.zombieTextures[i] = rl.LoadTexture(path)
 	}
