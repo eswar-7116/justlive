@@ -15,6 +15,7 @@ const (
 	minSpawnInterval   float32 = 0.4
 	spawnIntervalDecay float32 = 0.97
 	maxZombieSpeed     float32 = 200 // stay below player speed
+	zombieJostle       float32 = 120 // extra push px/s, 2px at 60 FPS
 )
 
 type Game struct {

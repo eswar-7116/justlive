@@ -72,7 +72,7 @@ func (g *Game) update(dt float32) {
 			z.Update(dt, g.player)
 		}
 
-		g.resolveZombieOverlaps()
+		g.resolveZombieOverlaps(dt)
 
 		activeBullets := g.bullets[:0]
 		for _, b := range g.bullets {
@@ -108,7 +108,7 @@ func (g *Game) update(dt float32) {
 	}
 }
 
-func (g *Game) resolveZombieOverlaps() {
+func (g *Game) resolveZombieOverlaps(dt float32) {
 	for i := 0; i < len(g.zombies); i++ {
 		for j := i + 1; j < len(g.zombies); j++ {
 			a := g.zombies[i]
@@ -120,7 +120,7 @@ func (g *Game) resolveZombieOverlaps() {
 			minDist := (a.Size.X + b.Size.X) / 2
 
 			if dist > 0 && dist < minDist {
-				push := ((minDist - dist) / 2) + 2
+				push := ((minDist - dist) / 2) + zombieJostle*dt
 
 				dir := rl.Vector2Normalize(diff)
 
