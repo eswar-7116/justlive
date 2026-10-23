@@ -67,6 +67,6 @@ func (z *Zombie) Center() rl.Vector2 {
 	}
 }
 
-func (z *Zombie) IncreaseSpeed(amount float32) {
-	z.speed += amount
+func (z *Zombie) IncreaseSpeed(amount, maxSpeed float32) {
+	z.speed = min(z.speed+amount, maxSpeed)
 }

@@ -9,7 +9,13 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-const maxFrameTime float32 = 0.05 // 20 FPS floor
+const (
+	maxFrameTime       float32 = 0.05 // 20 FPS floor
+	startSpawnInterval float32 = 2.0
+	minSpawnInterval   float32 = 0.4
+	spawnIntervalDecay float32 = 0.97
+	maxZombieSpeed     float32 = 200 // stay below player speed
+)
 
 type Game struct {
 	width          int32
@@ -41,7 +47,7 @@ func NewGame(width, height int32, title string) *Game {
 		gameState:     GameStateMenu,
 		player:        p,
 		zombies:       make([]*zombie.Zombie, 0),
-		spawnInterval: 2,
+		spawnInterval: startSpawnInterval,
 		bullets:       make([]*bullet.Bullet, 0),
 		fireRate:      0.15,
 		score:         0,

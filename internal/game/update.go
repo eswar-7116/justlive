@@ -23,6 +23,7 @@ func (g *Game) update(dt float32) {
 		if g.spawnTimer >= g.spawnInterval {
 			g.spawnZombie()
 			g.spawnTimer = 0
+			g.spawnInterval = max(g.spawnInterval*spawnIntervalDecay, minSpawnInterval)
 		}
 
 		if g.shootTimer > 0 {
@@ -52,9 +53,9 @@ func (g *Game) update(dt float32) {
 					if wasAlive && z.Health <= 0 {
 						g.score += 10
 						if g.score > 0 && g.score%50 == 0 {
-							g.zombieSpeed += 10
+							g.zombieSpeed = min(g.zombieSpeed+10, maxZombieSpeed)
 							for _, zo := range g.zombies {
-								zo.IncreaseSpeed(10)
+								zo.IncreaseSpeed(10, maxZombieSpeed)
 							}
 						}
 					}
@@ -99,6 +100,7 @@ func (g *Game) update(dt float32) {
 			g.bullets = g.bullets[:0]
 			g.score = 0
 			g.spawnTimer = 0
+			g.spawnInterval = startSpawnInterval
 			g.shootTimer = 0
 			g.zombieSpeed = 50
 			g.gameState = GameStatePlaying
