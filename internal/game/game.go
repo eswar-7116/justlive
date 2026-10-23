@@ -2,7 +2,9 @@ package game
 
 import (
 	"fmt"
+	"log"
 
+	"github.com/eswar-7116/justlive/assets"
 	"github.com/eswar-7116/justlive/internal/bullet"
 	"github.com/eswar-7116/justlive/internal/player"
 	"github.com/eswar-7116/justlive/internal/zombie"
@@ -66,11 +68,10 @@ func (g *Game) Run() {
 	// Load zombie textures
 	g.zombieTextures = make([]rl.Texture2D, 10)
 	for i := range 10 {
-		path := fmt.Sprintf("assets/zombie%d.png", i+1)
-		g.zombieTextures[i] = rl.LoadTexture(path)
+		g.zombieTextures[i] = loadTexture(fmt.Sprintf("zombie%d.png", i+1))
 	}
-	g.gunTexture = rl.LoadTexture("assets/gun.png")
-	g.bulletTexture = rl.LoadTexture("assets/bullet.png")
+	g.gunTexture = loadTexture("gun.png")
+	g.bulletTexture = loadTexture("bullet.png")
 	defer func() {
 		for _, tex := range g.zombieTextures {
 			rl.UnloadTexture(tex)
@@ -89,4 +90,14 @@ func (g *Game) Run() {
 		g.draw()
 		rl.EndDrawing()
 	}
+}
+
+func loadTexture(name string) rl.Texture2D {
+	data, err := assets.FS.ReadFile(name)
+	if err != nil {
+		log.Fatalf("load asset %s: %v", name, err)
+	}
+	img := rl.LoadImageFromMemory(".png", data, int32(len(data)))
+	defer rl.UnloadImage(img)
+	return rl.LoadTextureFromImage(img)
 }
