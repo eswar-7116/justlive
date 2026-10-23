@@ -38,6 +38,10 @@ func (z *Zombie) Update(dt float32, p *player.Player) {
 	)
 	z.Knockback = rl.Vector2Scale(z.Knockback, float32(math.Pow(0.01, float64(dt))))
 
+	if z.hitFlash > 0 {
+		z.hitFlash -= dt
+	}
+
 	z.animTimer += dt
 	if z.animTimer >= 0.1 {
 		z.animFrame = (z.animFrame + 1) % 10

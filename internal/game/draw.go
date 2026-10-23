@@ -3,6 +3,7 @@ package game
 import (
 	"fmt"
 	"image/color"
+	"math/rand"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -34,6 +35,8 @@ func (g *Game) drawMenu() {
 }
 
 func (g *Game) drawGameplay() {
+	rl.BeginMode2D(rl.Camera2D{Offset: g.shakeOffset(), Zoom: 1})
+
 	g.player.Draw(g.gunTexture)
 
 	for _, b := range g.bullets {
@@ -44,7 +47,17 @@ func (g *Game) drawGameplay() {
 		z.Draw(g.zombieTextures)
 	}
 
+	rl.EndMode2D()
+
 	g.drawUI()
+}
+
+func (g *Game) shakeOffset() rl.Vector2 {
+	strength := maxShakeOffset * g.shake * g.shake
+	return rl.Vector2{
+		X: (rand.Float32()*2 - 1) * strength,
+		Y: (rand.Float32()*2 - 1) * strength,
+	}
 }
 
 func (g *Game) drawUI() {

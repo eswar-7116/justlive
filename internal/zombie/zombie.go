@@ -10,7 +10,10 @@ const (
 	contactDamage    float32 = 10  // HP
 	contactInvuln    float32 = 0.5 // seconds
 	contactKnockback float32 = 800 // px/s
+	hitFlashTime     float32 = 0.1 // seconds
 )
+
+var hitFlashTint = color.RGBA{R: 255, G: 90, B: 90, A: 255}
 
 type Zombie struct {
 	Position  rl.Vector2
@@ -22,6 +25,7 @@ type Zombie struct {
 	Knockback rl.Vector2
 	animTimer float32
 	animFrame int
+	hitFlash  float32
 }
 
 func NewZombie(position rl.Vector2, size rl.Vector2, speed float32, health float32) *Zombie {
@@ -71,6 +75,12 @@ func (z *Zombie) Center() rl.Vector2 {
 		X: z.Position.X + z.Size.X/2,
 		Y: z.Position.Y + z.Size.Y/2,
 	}
+}
+
+func (z *Zombie) Hit(damage float32, knockback rl.Vector2) {
+	z.Health -= damage
+	z.Knockback = rl.Vector2Add(z.Knockback, knockback)
+	z.hitFlash = hitFlashTime
 }
 
 func (z *Zombie) IncreaseSpeed(amount, maxSpeed float32) {

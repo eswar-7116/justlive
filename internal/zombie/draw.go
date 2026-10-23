@@ -14,5 +14,9 @@ func (z *Zombie) Draw(textures []rl.Texture2D) {
 	}
 	drawRec := z.DrawRec()
 	origin := rl.NewVector2(0, 0)
-	rl.DrawTexturePro(texture, sourceRec, drawRec, origin, 0, rl.White)
+	tint := rl.White
+	if z.hitFlash > 0 {
+		tint = hitFlashTint
+	}
+	rl.DrawTexturePro(texture, sourceRec, drawRec, origin, 0, tint)
 }

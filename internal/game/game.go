@@ -21,9 +21,10 @@ const (
 
 // Zombie
 const (
-	zombieSize   float32 = 30
-	zombieHealth float32 = 100
-	zombieJostle float32 = 120 // extra push px/s, 2px at 60 FPS
+	zombieSize      float32 = 30
+	zombieHealth    float32 = 100
+	zombieJostle    float32 = 120 // extra push px/s, 2px at 60 FPS
+	bulletKnockback float32 = 100 // px/s
 )
 
 // Spawning
@@ -40,6 +41,13 @@ const (
 	zombieSpeedStep float32 = 10
 	killScore               = 10
 	speedUpScore            = 50 // speed up zombies every 50 score
+)
+
+// Screen shake
+const (
+	shakePerHit    float32 = 0.6
+	shakeDecay     float32 = 2.5 // per second
+	maxShakeOffset float32 = 25  // px
 )
 
 type Game struct {
@@ -59,6 +67,7 @@ type Game struct {
 	fireRate       float32
 	score          int
 	zombieSpeed    float32
+	shake          float32
 }
 
 func NewGame(width, height int32, title string) *Game {
@@ -83,6 +92,7 @@ func (g *Game) reset() {
 	g.spawnInterval = startSpawnInterval
 	g.shootTimer = 0
 	g.zombieSpeed = baseZombieSpeed
+	g.shake = 0
 }
 
 func (g *Game) Run() {

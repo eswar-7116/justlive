@@ -49,7 +49,8 @@ func (g *Game) update(dt float32) {
 			for _, z := range g.zombies {
 				if rl.CheckCollisionCircleRec(b.Position, b.Radius, z.CollisionRec()) {
 					wasAlive := z.Health > 0
-					z.Health -= b.Damage
+					pushDir := rl.Vector2Normalize(b.Direction)
+					z.Hit(b.Damage, rl.Vector2Scale(pushDir, bulletKnockback))
 					if wasAlive && z.Health <= 0 {
 						g.score += killScore
 						if g.score > 0 && g.score%speedUpScore == 0 {
@@ -60,17 +61,19 @@ func (g *Game) update(dt float32) {
 						}
 					}
 					b.Active = false
-
-					pushDir := rl.Vector2Normalize(b.Direction)
-					z.Knockback = rl.Vector2Add(z.Knockback, rl.Vector2Scale(pushDir, 100))
 					break
 				}
 			}
 		}
 
+		hpBefore := g.player.Health
 		for _, z := range g.zombies {
 			z.Update(dt, g.player)
 		}
+		if g.player.Health < hpBefore {
+			g.shake = min(g.shake+shakePerHit, 1)
+		}
+		g.shake = max(g.shake-shakeDecay*dt, 0)
 
 		g.resolveZombieOverlaps(dt)
 
