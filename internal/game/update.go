@@ -5,13 +5,12 @@ import (
 
 	"github.com/eswar-7116/justlive/internal/bullet"
 	"github.com/eswar-7116/justlive/internal/drop"
-	"github.com/eswar-7116/justlive/internal/input"
 	"github.com/eswar-7116/justlive/internal/particle"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 func (g *Game) update(dt float32) {
-	in := input.FromKeyboard()
+	in := g.bot.Input()
 
 	switch g.gameState {
 	case GameStateMenu:
@@ -144,6 +143,8 @@ func (g *Game) update(dt float32) {
 			g.gameState = GameStatePlaying
 		}
 	}
+
+	g.bot.Send(g.botState())
 }
 
 func (g *Game) resolveZombieOverlaps(dt float32) {

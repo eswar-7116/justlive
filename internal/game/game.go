@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/eswar-7116/justlive/assets"
+	"github.com/eswar-7116/justlive/internal/bot"
 	"github.com/eswar-7116/justlive/internal/bullet"
 	"github.com/eswar-7116/justlive/internal/drop"
 	"github.com/eswar-7116/justlive/internal/particle"
@@ -93,6 +94,9 @@ type Game struct {
 	// Effects
 	shake     float32
 	particles []*particle.Particle
+
+	// Bot
+	bot *bot.Server
 }
 
 func NewGame(width, height int32, title string) *Game {
@@ -105,6 +109,13 @@ func NewGame(width, height int32, title string) *Game {
 		highScore: loadHighScore(),
 	}
 	g.reset()
+
+	srv, err := bot.Listen(botAddr)
+	if err != nil {
+		log.Fatalf("bot: %v", err)
+	}
+	g.bot = srv
+
 	return g
 }
 
