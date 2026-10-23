@@ -17,13 +17,13 @@ func (z *Zombie) Update(dt float32, p *player.Player) {
 		}
 
 		pushDir := rl.Vector2Normalize(
-			rl.Vector2Subtract(z.Position, p.Center),
+			rl.Vector2Subtract(z.Center(), p.Center),
 		)
 
 		z.Knockback = rl.Vector2Scale(pushDir, 800)
 	}
 
-	z.direction = rl.Vector2Subtract(p.Center, z.Position)
+	z.direction = rl.Vector2Subtract(p.Center, z.Center())
 
 	moveVel := rl.Vector2Scale(
 		rl.Vector2Normalize(z.direction),

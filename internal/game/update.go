@@ -112,17 +112,7 @@ func (g *Game) resolveZombieOverlaps() {
 			a := g.zombies[i]
 			b := g.zombies[j]
 
-			centerA := rl.Vector2{
-				X: a.Position.X + a.Size.X/2,
-				Y: a.Position.Y + a.Size.Y/2,
-			}
-
-			centerB := rl.Vector2{
-				X: b.Position.X + b.Size.X/2,
-				Y: b.Position.Y + b.Size.Y/2,
-			}
-
-			diff := rl.Vector2Subtract(centerB, centerA)
+			diff := rl.Vector2Subtract(b.Center(), a.Center())
 			dist := rl.Vector2Length(diff)
 
 			minDist := (a.Size.X + b.Size.X) / 2

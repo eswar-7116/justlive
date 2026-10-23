@@ -60,6 +60,13 @@ func (z *Zombie) CollisionRec() rl.Rectangle {
 	}
 }
 
+func (z *Zombie) Center() rl.Vector2 {
+	return rl.Vector2{
+		X: z.Position.X + z.Size.X/2,
+		Y: z.Position.Y + z.Size.Y/2,
+	}
+}
+
 func (z *Zombie) IncreaseSpeed(amount float32) {
 	z.speed += amount
 }
