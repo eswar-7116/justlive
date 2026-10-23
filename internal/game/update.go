@@ -5,6 +5,7 @@ import (
 
 	"github.com/eswar-7116/justlive/internal/bullet"
 	"github.com/eswar-7116/justlive/internal/drop"
+	"github.com/eswar-7116/justlive/internal/input"
 	"github.com/eswar-7116/justlive/internal/particle"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -22,7 +23,8 @@ func (g *Game) update(dt float32) {
 			break
 		}
 
-		g.player.Update(dt)
+		in := input.FromKeyboard()
+		g.player.Update(dt, in)
 
 		g.spawnTimer += dt
 		if g.spawnTimer >= g.spawnInterval {
@@ -35,7 +37,7 @@ func (g *Game) update(dt float32) {
 			g.shootTimer -= dt
 		}
 
-		if rl.IsMouseButtonDown(rl.MouseLeftButton) && g.shootTimer <= 0 {
+		if in.Shoot && g.shootTimer <= 0 {
 			gunPos, dir := g.player.GetGunPosAndDir(g.gunTexture)
 			knockback := bulletKnockback
 			if g.player.KnockbackBoost > 0 {

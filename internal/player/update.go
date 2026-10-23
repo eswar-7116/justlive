@@ -3,16 +3,9 @@ package player
 import (
 	"math"
 
+	"github.com/eswar-7116/justlive/internal/input"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
-
-func boolToFloat32(b bool) float32 {
-	if b {
-		return 1
-	} else {
-		return 0
-	}
-}
 
 func (p *Player) checkBounds() {
 	screenWidth := float32(rl.GetScreenWidth())
@@ -31,7 +24,7 @@ func (p *Player) checkBounds() {
 	}
 }
 
-func (p *Player) Update(dt float32) {
+func (p *Player) Update(dt float32, in input.Input) {
 	if p.InvulnerableTimer > 0 {
 		p.InvulnerableTimer -= dt
 	}
@@ -43,13 +36,10 @@ func (p *Player) Update(dt float32) {
 		p.DashCooldown -= dt
 	}
 
-	p.direction.X = boolToFloat32(rl.IsKeyDown(rl.KeyD)) - boolToFloat32(rl.IsKeyDown(rl.KeyA))
-	p.direction.Y = boolToFloat32(rl.IsKeyDown(rl.KeyS)) - boolToFloat32(rl.IsKeyDown(rl.KeyW))
+	p.direction = in.Move
+	p.Angle = float32(math.Atan2(float64(in.Aim.Y-p.Center.Y), float64(in.Aim.X-p.Center.X)))
 
-	mousePos := rl.GetMousePosition()
-	p.Angle = float32(math.Atan2(float64(mousePos.Y-p.Center.Y), float64(mousePos.X-p.Center.X)))
-
-	if rl.IsKeyPressed(rl.KeySpace) && p.DashCooldown <= 0 && !p.IsDashing() {
+	if in.Dash && p.DashCooldown <= 0 && !p.IsDashing() {
 		p.startDash()
 	}
 
