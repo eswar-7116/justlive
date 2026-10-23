@@ -35,6 +35,9 @@ func (p *Player) Update(dt float32) {
 	if p.InvulnerableTimer > 0 {
 		p.InvulnerableTimer -= dt
 	}
+	if p.KnockbackBoost > 0 {
+		p.KnockbackBoost -= dt
+	}
 
 	p.direction.X = boolToFloat32(rl.IsKeyDown(rl.KeyD)) - boolToFloat32(rl.IsKeyDown(rl.KeyA))
 	p.direction.Y = boolToFloat32(rl.IsKeyDown(rl.KeyS)) - boolToFloat32(rl.IsKeyDown(rl.KeyW))

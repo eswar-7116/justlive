@@ -1,7 +1,10 @@
 package game
 
 import (
+	"math/rand"
+
 	"github.com/eswar-7116/justlive/internal/bullet"
+	"github.com/eswar-7116/justlive/internal/drop"
 	"github.com/eswar-7116/justlive/internal/particle"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -33,7 +36,11 @@ func (g *Game) update(dt float32) {
 
 		if rl.IsMouseButtonDown(rl.MouseLeftButton) && g.shootTimer <= 0 {
 			gunPos, dir := g.player.GetGunPosAndDir(g.gunTexture)
-			g.bullets = append(g.bullets, bullet.NewBullet(gunPos, dir))
+			knockback := bulletKnockback
+			if g.player.KnockbackBoost > 0 {
+				knockback *= knockbackBoostMult
+			}
+			g.bullets = append(g.bullets, bullet.NewBullet(gunPos, dir, knockback))
 			g.shootTimer = g.fireRate
 		}
 
@@ -51,9 +58,12 @@ func (g *Game) update(dt float32) {
 				if rl.CheckCollisionCircleRec(b.Position, b.Radius, z.CollisionRec()) {
 					wasAlive := z.Health > 0
 					pushDir := rl.Vector2Normalize(b.Direction)
-					z.Hit(b.Damage, rl.Vector2Scale(pushDir, bulletKnockback))
+					z.Hit(b.Damage, rl.Vector2Scale(pushDir, b.Knockback))
 					if wasAlive && z.Health <= 0 {
 						g.particles = append(g.particles, particle.Burst(z.Center())...)
+						if rand.Float32() < dropChance {
+							g.drops = append(g.drops, drop.RandomDrop(z.Center()))
+						}
 						g.score += killScore
 						if g.score > 0 && g.score%speedUpScore == 0 {
 							g.zombieSpeed = min(g.zombieSpeed+zombieSpeedStep, maxZombieSpeed)
@@ -98,6 +108,23 @@ func (g *Game) update(dt float32) {
 			}
 		}
 		g.particles = activeParticles
+
+		for _, d := range g.drops {
+			d.Update(dt)
+			if d.Active && rl.CheckCollisionCircles(g.player.Center, g.player.Radius, d.Position, drop.Radius) {
+				if d.Apply(g.player) {
+					d.Active = false
+				}
+			}
+		}
+
+		activeDrops := g.drops[:0]
+		for _, d := range g.drops {
+			if d.Active {
+				activeDrops = append(activeDrops, d)
+			}
+		}
+		g.drops = activeDrops
 
 		activeZombies := g.zombies[:0]
 		for _, z := range g.zombies {

@@ -12,16 +12,18 @@ type Bullet struct {
 	Speed     float32
 	Damage    float32
 	Radius    float32
+	Knockback float32
 	Active    bool
 }
 
-func NewBullet(pos, dir rl.Vector2) *Bullet {
+func NewBullet(pos, dir rl.Vector2, knockback float32) *Bullet {
 	return &Bullet{
 		Position:  pos,
 		Direction: rl.Vector2Normalize(dir),
 		Speed:     1000,
 		Damage:    25,
 		Radius:    5,
+		Knockback: knockback,
 		Active:    true,
 	}
 }

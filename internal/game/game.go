@@ -6,6 +6,7 @@ import (
 
 	"github.com/eswar-7116/justlive/assets"
 	"github.com/eswar-7116/justlive/internal/bullet"
+	"github.com/eswar-7116/justlive/internal/drop"
 	"github.com/eswar-7116/justlive/internal/particle"
 	"github.com/eswar-7116/justlive/internal/player"
 	"github.com/eswar-7116/justlive/internal/zombie"
@@ -51,6 +52,12 @@ const (
 	maxShakeOffset float32 = 25  // px
 )
 
+// Drops
+const (
+	dropChance         float32 = 0.15 // per kill
+	knockbackBoostMult float32 = 4
+)
+
 type Game struct {
 	width          int32
 	height         int32
@@ -70,6 +77,7 @@ type Game struct {
 	zombieSpeed    float32
 	shake          float32
 	particles      []*particle.Particle
+	drops          []*drop.Drop
 }
 
 func NewGame(width, height int32, title string) *Game {
@@ -96,6 +104,7 @@ func (g *Game) reset() {
 	g.zombieSpeed = baseZombieSpeed
 	g.shake = 0
 	g.particles = g.particles[:0]
+	g.drops = g.drops[:0]
 }
 
 func (g *Game) Run() {

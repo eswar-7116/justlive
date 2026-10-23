@@ -41,6 +41,10 @@ func (g *Game) drawGameplay() {
 		p.Draw()
 	}
 
+	for _, d := range g.drops {
+		d.Draw()
+	}
+
 	g.player.Draw(g.gunTexture)
 
 	for _, b := range g.bullets {
@@ -101,6 +105,11 @@ func (g *Game) drawUI() {
 
 	hpText := fmt.Sprintf("%.0f/%.0f", max(g.player.Health, 0), g.player.MaxHealth)
 	rl.DrawText(hpText, int32(barX+barWidth+8), 20, 12, rl.LightGray)
+
+	if g.player.KnockbackBoost > 0 {
+		boostText := fmt.Sprintf("Knockback %.1fs", g.player.KnockbackBoost)
+		rl.DrawText(boostText, 20, 38, 12, color.RGBA{R: 230, G: 126, B: 34, A: 255})
+	}
 
 	scoreText := fmt.Sprintf("Score: %d", g.score)
 	rl.DrawText(scoreText, g.width - rl.MeasureText(scoreText, 20) - 20, 20, 20, rl.RayWhite)

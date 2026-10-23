@@ -24,6 +24,7 @@ type Player struct {
 	MaxHealth         float32
 	InvulnerableTimer float32
 	Angle             float32
+	KnockbackBoost    float32 // seconds left
 }
 
 func NewPlayer(center rl.Vector2, radius float32) *Player {
