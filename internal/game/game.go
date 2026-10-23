@@ -51,6 +51,9 @@ func (g *Game) Run() {
 	rl.InitWindow(int32(g.width), int32(g.height), g.title)
 	defer rl.CloseWindow()
 
+	// Disable the exit key (ESC) to prevent the game from closing
+	rl.SetExitKey(0)
+
 	// Load zombie textures
 	g.zombieTextures = make([]rl.Texture2D, 10)
 	for i := 0; i < 10; i++ {
