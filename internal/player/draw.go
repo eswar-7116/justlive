@@ -16,6 +16,32 @@ func (p *Player) Draw(gunTexture rl.Texture2D) {
 
 	borderThickness := float32(2.5)
 
+	// Draw hands
+	handRadius := p.Radius * 0.35
+	handDist := p.Radius*0.85 + 10
+
+	// Left hand offset
+	leftAngle := p.Angle - math.Pi/12
+	leftHandPos := rl.Vector2{
+		X: p.Center.X + float32(math.Cos(float64(leftAngle)))*(handDist+15),
+		Y: p.Center.Y + float32(math.Sin(float64(leftAngle)))*(handDist+15),
+	}
+
+	// Right hand offset
+	rightAngle := p.Angle + math.Pi/10
+	rightHandPos := rl.Vector2{
+		X: p.Center.X + float32(math.Cos(float64(rightAngle)))*handDist,
+		Y: p.Center.Y + float32(math.Sin(float64(rightAngle)))*handDist,
+	}
+
+	// Draw hand borders
+	rl.DrawCircleV(leftHandPos, handRadius+borderThickness, rl.Black)
+	rl.DrawCircleV(rightHandPos, handRadius+borderThickness, rl.Black)
+
+	// Draw hands
+	rl.DrawCircleV(leftHandPos, handRadius, color)
+	rl.DrawCircleV(rightHandPos, handRadius, color)
+
 	// Draw Gun
 	gunDist := p.Radius * 1.1
 	gunPos := rl.Vector2{
@@ -43,30 +69,4 @@ func (p *Player) Draw(gunTexture rl.Texture2D) {
 	rl.DrawCircleV(p.Center, p.Radius+borderThickness, rl.Black)
 	// Draw body
 	rl.DrawCircleV(p.Center, p.Radius, color)
-
-	// Draw hands
-	handRadius := p.Radius * 0.35
-	handDist := p.Radius * 0.85
-
-	// Left hand offset
-	leftAngle := p.Angle - math.Pi/6
-	leftHandPos := rl.Vector2{
-		X: p.Center.X + float32(math.Cos(float64(leftAngle)))*handDist,
-		Y: p.Center.Y + float32(math.Sin(float64(leftAngle)))*handDist,
-	}
-
-	// Right hand offset
-	rightAngle := p.Angle + math.Pi/6
-	rightHandPos := rl.Vector2{
-		X: p.Center.X + float32(math.Cos(float64(rightAngle)))*handDist,
-		Y: p.Center.Y + float32(math.Sin(float64(rightAngle)))*handDist,
-	}
-
-	// Draw hand borders
-	rl.DrawCircleV(leftHandPos, handRadius+borderThickness, rl.Black)
-	rl.DrawCircleV(rightHandPos, handRadius+borderThickness, rl.Black)
-
-	// Draw hands
-	rl.DrawCircleV(leftHandPos, handRadius, color)
-	rl.DrawCircleV(rightHandPos, handRadius, color)
 }
