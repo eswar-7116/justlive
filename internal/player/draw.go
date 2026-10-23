@@ -16,6 +16,13 @@ func (p *Player) Draw(gunTexture rl.Texture2D) {
 
 	borderThickness := float32(2.5)
 
+	// Draw dash afterimages
+	for _, g := range p.ghosts {
+		ghostColor := p.Color
+		ghostColor.A = uint8(120 * g.life / ghostLife)
+		rl.DrawCircleV(g.pos, p.Radius, ghostColor)
+	}
+
 	// Draw hands
 	handRadius := p.Radius * 0.35
 	handDist := p.Radius*0.85 + 10

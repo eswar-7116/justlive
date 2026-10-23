@@ -14,6 +14,19 @@ const (
 	gunDistFactor float32 = 1.1
 )
 
+// Dash
+const (
+	dashSpeed    float32 = 900  // px/s
+	dashTime     float32 = 0.15 // seconds
+	dashCooldown float32 = 1.5  // seconds
+	ghostLife    float32 = 0.2  // seconds
+)
+
+type ghost struct {
+	pos  rl.Vector2
+	life float32
+}
+
 type Player struct {
 	Center            rl.Vector2
 	Radius            float32
@@ -25,6 +38,10 @@ type Player struct {
 	InvulnerableTimer float32
 	Angle             float32
 	KnockbackBoost    float32 // seconds left
+	DashCooldown      float32 // seconds left
+	dashTimer         float32
+	dashDir           rl.Vector2
+	ghosts            []ghost
 }
 
 func NewPlayer(center rl.Vector2, radius float32) *Player {
@@ -38,6 +55,10 @@ func NewPlayer(center rl.Vector2, radius float32) *Player {
 		InvulnerableTimer: 0,
 		Angle:             0,
 	}
+}
+
+func (p *Player) IsDashing() bool {
+	return p.dashTimer > 0
 }
 
 func (p *Player) GetGunPosAndDir(gunTexture rl.Texture2D) (rl.Vector2, rl.Vector2) {

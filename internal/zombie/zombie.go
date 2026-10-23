@@ -7,10 +7,11 @@ import (
 )
 
 const (
-	contactDamage    float32 = 10  // HP
-	contactInvuln    float32 = 0.5 // seconds
-	contactKnockback float32 = 800 // px/s
-	hitFlashTime     float32 = 0.1 // seconds
+	contactDamage    float32 = 10   // HP
+	contactInvuln    float32 = 0.5  // seconds
+	contactKnockback float32 = 800  // px/s
+	dashKnockback    float32 = 1600 // px/s
+	hitFlashTime     float32 = 0.1  // seconds
 )
 
 var hitFlashTint = color.RGBA{R: 255, G: 90, B: 90, A: 255}
