@@ -1,0 +1,60 @@
+name: Go
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - "README.md"
+      - "LICENSE"
+
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - "README.md"
+      - "LICENSE"
+
+jobs:
+
+  vet:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.26.4'
+
+    - name: Vet
+      run: make vet
+
+  build:
+    needs: vet
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - linux-amd64
+          - linux-arm64
+          - windows-amd64
+          - windows-arm64
+          - darwin-amd64
+          - darwin-arm64
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.26.4'
+
+    - name: Build
+      run: make ${{ matrix.target }}
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: justlive-${{ matrix.target }}
+        path: dist/*
+        if-no-files-found: error
