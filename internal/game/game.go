@@ -6,6 +6,7 @@ import (
 
 	"github.com/eswar-7116/justlive/assets"
 	"github.com/eswar-7116/justlive/internal/bullet"
+	"github.com/eswar-7116/justlive/internal/particle"
 	"github.com/eswar-7116/justlive/internal/player"
 	"github.com/eswar-7116/justlive/internal/zombie"
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -68,6 +69,7 @@ type Game struct {
 	score          int
 	zombieSpeed    float32
 	shake          float32
+	particles      []*particle.Particle
 }
 
 func NewGame(width, height int32, title string) *Game {
@@ -93,6 +95,7 @@ func (g *Game) reset() {
 	g.shootTimer = 0
 	g.zombieSpeed = baseZombieSpeed
 	g.shake = 0
+	g.particles = g.particles[:0]
 }
 
 func (g *Game) Run() {

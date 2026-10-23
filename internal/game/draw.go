@@ -37,6 +37,10 @@ func (g *Game) drawMenu() {
 func (g *Game) drawGameplay() {
 	rl.BeginMode2D(rl.Camera2D{Offset: g.shakeOffset(), Zoom: 1})
 
+	for _, p := range g.particles {
+		p.Draw()
+	}
+
 	g.player.Draw(g.gunTexture)
 
 	for _, b := range g.bullets {

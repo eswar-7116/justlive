@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/eswar-7116/justlive/internal/bullet"
+	"github.com/eswar-7116/justlive/internal/particle"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -52,6 +53,7 @@ func (g *Game) update(dt float32) {
 					pushDir := rl.Vector2Normalize(b.Direction)
 					z.Hit(b.Damage, rl.Vector2Scale(pushDir, bulletKnockback))
 					if wasAlive && z.Health <= 0 {
+						g.particles = append(g.particles, particle.Burst(z.Center())...)
 						g.score += killScore
 						if g.score > 0 && g.score%speedUpScore == 0 {
 							g.zombieSpeed = min(g.zombieSpeed+zombieSpeedStep, maxZombieSpeed)
@@ -84,6 +86,18 @@ func (g *Game) update(dt float32) {
 			}
 		}
 		g.bullets = activeBullets
+
+		for _, p := range g.particles {
+			p.Update(dt)
+		}
+
+		activeParticles := g.particles[:0]
+		for _, p := range g.particles {
+			if p.Life > 0 {
+				activeParticles = append(activeParticles, p)
+			}
+		}
+		g.particles = activeParticles
 
 		activeZombies := g.zombies[:0]
 		for _, z := range g.zombies {
