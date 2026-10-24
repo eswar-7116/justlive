@@ -16,6 +16,7 @@ var dropKindNames = map[drop.Kind]string{
 var gameStateNames = map[GameState]string{
 	GameStateMenu:    "menu",
 	GameStatePlaying: "playing",
+	GameStateDying:   "dying",
 	GameStateOver:    "over",
 }
 

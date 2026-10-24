@@ -14,8 +14,14 @@ func (g *Game) draw() {
 		g.drawMenu()
 	case GameStatePlaying:
 		g.drawGameplay()
+	case GameStateDying:
+		g.drawDying()
 	case GameStateOver:
 		g.drawGameover()
+		// Fade in from the death screen
+		if g.overFade > 0 {
+			rl.DrawRectangle(0, 0, g.width, g.height, rl.Fade(rl.Black, g.overFade/overFadeTime))
+		}
 	}
 }
 
@@ -42,13 +48,32 @@ func (g *Game) drawMenu() {
 }
 
 func (g *Game) drawGameplay() {
-	rl.BeginMode2D(rl.Camera2D{Offset: g.shakeOffset(), Zoom: 1})
+	g.drawWorld(rl.Camera2D{Offset: g.shakeOffset(), Zoom: 1})
+	g.drawUI()
+}
+
+func (g *Game) drawWorld(camera rl.Camera2D) {
+	rl.BeginMode2D(camera)
+
+	// Shells on the ground lie under everything
+	for _, s := range g.shells {
+		if s.Grounded {
+			s.Draw()
+		}
+	}
 
 	for _, d := range g.drops {
 		d.Draw()
 	}
 
 	g.player.Draw(g.gunTexture)
+
+	// Shells in the air fly over the player
+	for _, s := range g.shells {
+		if !s.Grounded {
+			s.Draw()
+		}
+	}
 
 	for _, b := range g.bullets {
 		b.Draw(g.bulletTexture)
@@ -63,8 +88,6 @@ func (g *Game) drawGameplay() {
 	}
 
 	rl.EndMode2D()
-
-	g.drawUI()
 }
 
 func (g *Game) shakeOffset() rl.Vector2 {
