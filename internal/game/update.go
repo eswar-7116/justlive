@@ -21,8 +21,7 @@ func (g *Game) update(dt float32) {
 		}
 	case GameStatePlaying:
 		if g.player.Health <= 0 {
-			g.checkAndSaveHighScore()
-			g.gameState = GameStateOver
+			g.startDying()
 			break
 		}
 
@@ -96,41 +95,9 @@ func (g *Game) update(dt float32) {
 
 		g.resolveZombieOverlaps(dt)
 
-		activeBullets := g.bullets[:0]
-		for _, b := range g.bullets {
-			if b.Active {
-				activeBullets = append(activeBullets, b)
-			}
-		}
-		g.bullets = activeBullets
+		g.removeInactiveBullets()
 
-		for _, p := range g.particles {
-			p.Update(dt)
-		}
-
-		activeParticles := g.particles[:0]
-		for _, p := range g.particles {
-			if p.Life > 0 {
-				activeParticles = append(activeParticles, p)
-			}
-		}
-		g.particles = activeParticles
-
-		for _, s := range g.shells {
-			s.Update(dt)
-		}
-
-		activeShells := g.shells[:0]
-		for _, s := range g.shells {
-			if s.Life > 0 {
-				activeShells = append(activeShells, s)
-			}
-		}
-		// Drop the oldest shells over the cap
-		if len(activeShells) > maxShells {
-			activeShells = activeShells[len(activeShells)-maxShells:]
-		}
-		g.shells = activeShells
+		g.updateEffects(dt)
 
 		for _, d := range g.drops {
 			d.Update(dt)
@@ -156,7 +123,10 @@ func (g *Game) update(dt float32) {
 			}
 		}
 		g.zombies = activeZombies
+	case GameStateDying:
+		g.updateDying(dt, in.Start)
 	case GameStateOver:
+		g.overFade = max(g.overFade-dt, 0)
 		if in.Start {
 			g.reset()
 			g.gameState = GameStatePlaying
@@ -192,4 +162,44 @@ func (g *Game) resolveZombieOverlaps(dt float32) {
 			}
 		}
 	}
+}
+
+func (g *Game) removeInactiveBullets() {
+	activeBullets := g.bullets[:0]
+	for _, b := range g.bullets {
+		if b.Active {
+			activeBullets = append(activeBullets, b)
+		}
+	}
+	g.bullets = activeBullets
+}
+
+func (g *Game) updateEffects(dt float32) {
+	for _, p := range g.particles {
+		p.Update(dt)
+	}
+
+	activeParticles := g.particles[:0]
+	for _, p := range g.particles {
+		if p.Life > 0 {
+			activeParticles = append(activeParticles, p)
+		}
+	}
+	g.particles = activeParticles
+
+	for _, s := range g.shells {
+		s.Update(dt)
+	}
+
+	activeShells := g.shells[:0]
+	for _, s := range g.shells {
+		if s.Life > 0 {
+			activeShells = append(activeShells, s)
+		}
+	}
+	// Drop the oldest shells over the cap
+	if len(activeShells) > maxShells {
+		activeShells = activeShells[len(activeShells)-maxShells:]
+	}
+	g.shells = activeShells
 }

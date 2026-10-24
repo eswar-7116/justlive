@@ -16,6 +16,20 @@ const (
 	ejectMargin      float32 = 4    // px past the body edge
 )
 
+// Death
+const (
+	deathFallTime  float32 = 0.35 // seconds to hit the ground
+	deathSquash    float32 = 0.15 // body bulge on impact
+	deathDarken    float32 = 0.45
+	poolSpreadTime float32 = 1.5 // seconds
+	poolSize       float32 = 1.5 // of body radius
+	gunSlide       float32 = 26  // px the gun slides away
+	gunSpin        float32 = 2.2 // radians the gun turns while sliding
+	limbSpread     float32 = 1.1 // radians hands fall open to
+)
+
+var poolColor = color.RGBA{R: 110, G: 0, B: 0, A: 200}
+
 // Dash
 const (
 	dashSpeed    float32 = 900  // px/s
@@ -44,6 +58,7 @@ type Player struct {
 	dashTimer         float32
 	dashDir           rl.Vector2
 	ghosts            []ghost
+	DeathTime         float32 // seconds since dying
 }
 
 func NewPlayer(center rl.Vector2, radius float32) *Player {

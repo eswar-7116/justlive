@@ -10,7 +10,7 @@ import (
 func (z *Zombie) Update(dt float32, p *player.Player) {
 	zrect := z.CollisionRec()
 
-	if rl.CheckCollisionCircleRec(p.Center, p.Radius, zrect) {
+	if p.Health > 0 && rl.CheckCollisionCircleRec(p.Center, p.Radius, zrect) {
 		knockback := dashKnockback
 		if !p.IsDashing() {
 			knockback = contactKnockback

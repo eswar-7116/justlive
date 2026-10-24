@@ -64,6 +64,18 @@ const (
 	maxShells = 150
 )
 
+// Death
+const (
+	deathDuration  float32 = 2.5  // seconds before the game over screen
+	deathTimeScale float32 = 0.35 // slow motion while dying
+	deathZoom      float32 = 0.3  // extra zoom on the body
+	deathDarken    float32 = 0.55 // screen darkening at the end
+	deathTextDelay float32 = 0.9  // seconds before "YOU DIED"
+	deathTextFade  float32 = 0.6  // seconds
+	deathBursts            = 3    // blood bursts on death
+	overFadeTime   float32 = 0.6  // game over screen fade in
+)
+
 type Game struct {
 	// Window
 	width     int32
@@ -100,6 +112,10 @@ type Game struct {
 	shake     float32
 	particles []*particle.Particle
 	shells    []*shell.Shell
+
+	// Death
+	deathTime float32
+	overFade  float32
 }
 
 func NewGame(width, height int32, title string) *Game {
@@ -139,6 +155,10 @@ func (g *Game) reset() {
 	g.shake = 0
 	g.particles = g.particles[:0]
 	g.shells = g.shells[:0]
+
+	// Death
+	g.deathTime = 0
+	g.overFade = 0
 }
 
 func (g *Game) Run() {
