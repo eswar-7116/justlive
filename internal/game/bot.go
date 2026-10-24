@@ -5,7 +5,7 @@ import (
 	"github.com/eswar-7116/justlive/internal/drop"
 )
 
-const botAddr = "localhost:7777"
+const botAddr = "0.0.0.0:7777"
 
 var dropKindNames = map[drop.Kind]string{
 	drop.KindMedkit:    "medkit",
