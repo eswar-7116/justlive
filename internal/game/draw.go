@@ -44,11 +44,25 @@ func (g *Game) drawMenu() {
 func (g *Game) drawGameplay() {
 	rl.BeginMode2D(rl.Camera2D{Offset: g.shakeOffset(), Zoom: 1})
 
+	// Shells on the ground lie under everything
+	for _, s := range g.shells {
+		if s.Grounded {
+			s.Draw()
+		}
+	}
+
 	for _, d := range g.drops {
 		d.Draw()
 	}
 
 	g.player.Draw(g.gunTexture)
+
+	// Shells in the air fly over the player
+	for _, s := range g.shells {
+		if !s.Grounded {
+			s.Draw()
+		}
+	}
 
 	for _, b := range g.bullets {
 		b.Draw(g.bulletTexture)

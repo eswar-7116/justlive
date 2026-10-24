@@ -8,10 +8,12 @@ import (
 )
 
 const (
-	baseMaxHealth float32 = 100
-	baseSpeed     float32 = 250
-	gunScale      float32 = 0.2
-	gunDistFactor float32 = 1.1
+	baseMaxHealth    float32 = 100
+	baseSpeed        float32 = 250
+	gunScale         float32 = 0.25
+	gunDistFactor    float32 = 1.1
+	ejectPortForward float32 = 0.05 // of gun length, ahead of its center
+	ejectMargin      float32 = 4    // px past the body edge
 )
 
 // Dash
@@ -61,12 +63,29 @@ func (p *Player) IsDashing() bool {
 	return p.dashTimer > 0
 }
 
-func (p *Player) GetGunPosAndDir(gunTexture rl.Texture2D) (rl.Vector2, rl.Vector2) {
+func (p *Player) GetGunCenter() rl.Vector2 {
 	gunDist := p.Radius * gunDistFactor
-	gunPos := rl.Vector2{
+	return rl.Vector2{
 		X: p.Center.X + float32(math.Cos(float64(p.Angle)))*gunDist,
 		Y: p.Center.Y + float32(math.Sin(float64(p.Angle)))*gunDist,
 	}
+}
+
+// Ejection port on the receiver, where shells come out
+func (p *Player) GetEjectionPort(gunTexture rl.Texture2D) rl.Vector2 {
+	dir := rl.Vector2{
+		X: float32(math.Cos(float64(p.Angle))),
+		Y: float32(math.Sin(float64(p.Angle))),
+	}
+	gunLen := float32(gunTexture.Height) * gunScale
+	dist := p.Radius*gunDistFactor + gunLen*ejectPortForward
+	// Body is drawn over the back of the gun, so keep the port visible
+	dist = max(dist, p.Radius+ejectMargin)
+	return rl.Vector2Add(p.Center, rl.Vector2Scale(dir, dist))
+}
+
+func (p *Player) GetGunPosAndDir(gunTexture rl.Texture2D) (rl.Vector2, rl.Vector2) {
+	gunPos := p.GetGunCenter()
 
 	dir := rl.Vector2{
 		X: float32(math.Cos(float64(p.Angle))),

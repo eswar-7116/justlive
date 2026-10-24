@@ -9,6 +9,7 @@ import (
 	"github.com/eswar-7116/justlive/internal/drop"
 	"github.com/eswar-7116/justlive/internal/particle"
 	"github.com/eswar-7116/justlive/internal/player"
+	"github.com/eswar-7116/justlive/internal/shell"
 	"github.com/eswar-7116/justlive/internal/zombie"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -58,6 +59,11 @@ const (
 	knockbackBoostMult float32 = 4
 )
 
+// Shells
+const (
+	maxShells = 150
+)
+
 type Game struct {
 	// Window
 	width     int32
@@ -93,6 +99,7 @@ type Game struct {
 	// Effects
 	shake     float32
 	particles []*particle.Particle
+	shells    []*shell.Shell
 }
 
 func NewGame(width, height int32, title string) *Game {
@@ -131,6 +138,7 @@ func (g *Game) reset() {
 	// Effects
 	g.shake = 0
 	g.particles = g.particles[:0]
+	g.shells = g.shells[:0]
 }
 
 func (g *Game) Run() {
